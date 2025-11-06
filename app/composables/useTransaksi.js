@@ -36,6 +36,15 @@ export const useTransaksi = () => {
     }
   }
 
+  const updateTransaksi = async (id,payload) =>{
+    try{
+      const res = await api.put(`/transaksi/${id}`,payload);
+      return res.data;
+    }catch(err){
+      throw err.response?.data || err;
+    }
+  }
+
   const deleteTransaksi = async (id) => {
       try{
         const res = await api.delete(`/transaksi/${id}`);
@@ -53,5 +62,6 @@ export const useTransaksi = () => {
     getTransaksiId,
     createTransaksi,
     deleteTransaksi,
+    updateTransaksi,
   };
 };

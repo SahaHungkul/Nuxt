@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useRouter } from '#app';
+import { useRouter, useRoute } from '#app';
 import { useTransaksi } from '~/composables/useTransaksi';
 import { useCoa } from '~/composables/useCoa';
 
+const route = useRoute();
 const router = useRouter();
-const { createTransaksi } = useTransaksi();
+const { updateTransaksi, getTransaksiId } = useTransaksi();
 const { coa, fetchCoa } = useCoa();
 
 const tanggal = ref('');
 const coa_id = ref('');
-const kode = ref('');
-
+const kode = ref(''); 
 const deskripsi = ref('');
 const debit = ref('');
 const kredit = ref('');
@@ -21,7 +21,14 @@ const loading = ref(false);
 
 onMounted(async () => {
   await fetchCoa();
-})
+  const res  = await getTransaksiId(route.params.id);
+
+  tanggal.value = res.data.tanggal;
+  coa_id.value = res.data.coa_id;
+  deskripsi.value = res.data.deskripsi;
+  debit.value = res.data.debit;
+  kredit.value = res.data.kredit;
+});
 
 watch(coa_id, (val) => {
   const selected = coa.value.find((c) => c.id === val);
@@ -31,7 +38,7 @@ watch(coa_id, (val) => {
 const handleSubmit = async () => {
   try {
     loading.value = true
-    await createTransaksi({
+    await updateTransaksi(route.params.id,{
       tanggal: tanggal.value,
       coa_id: coa_id.value,
       deskripsi: deskripsi.value,
@@ -39,7 +46,7 @@ const handleSubmit = async () => {
       kredit: kredit.value
     })
 
-    message.value = 'Data transaksi berhasil ditambahkan!';
+    message.value = 'Data transaksi berhasil diperbarui!';
     tanggal.value = '';
     coa_id.value = '';
     deskripsi.value = '';
@@ -49,7 +56,7 @@ const handleSubmit = async () => {
     router.push('/transaksi');
   } catch (err) {
     console.error(err);
-    error.value = err.message || 'Gagal menambahkan data transaksi';
+    error.value = err.message || 'Gagal memperbarui data transaksi';
   } finally {
     loading.value = false;
   }
@@ -146,11 +153,3 @@ const handleSubmit = async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-</style>

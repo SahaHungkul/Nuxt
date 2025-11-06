@@ -20,7 +20,7 @@ onMounted(fetchTransaksi);
     <div class="max-w-6xl mx-auto px-6">
         <h1 class="text-2xl font-bold mb-4 text-black">Transaksi</h1>
 
-        <NuxtLink to="/transaksi/create" class="bg-blue-600 text-white p-2 rounded">Create</NuxtLink>
+        <NuxtLink to="/transaksi/create" class="bg-blue-600 text-white px-4 p-2 rounded">Create</NuxtLink>
         <div v-if="loading">Loading...</div>
         <div v-else-if="error">Terjadi kesalahan: {{ error }}</div>
         <table v-else class="mt-4 border w-full">
@@ -37,8 +37,8 @@ onMounted(fetchTransaksi);
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(t,i) in transaksi" :key="t.id">
-                    <td class="border  border-gray-300 p-2 text-center">{{ i+1 }}</td>
+                <tr v-for="(t, i) in transaksi" :key="t.id">
+                    <td class="border  border-gray-300 p-2 text-center">{{ i + 1 }}</td>
                     <td class="border  border-gray-300 p-2 text-center">{{ t.tanggal }}</td>
                     <td class="border  border-gray-300 p-2 text-center">{{ t.coa?.kode }}</td>
                     <td class="border  border-gray-300 p-2">{{ t.coa?.nama }}</td>
@@ -47,8 +47,11 @@ onMounted(fetchTransaksi);
                     <td class="border  border-gray-300 p-2 text-right">{{ t.kredit }}</td>
                     <td class="border  border-gray-300 p-2">
                         <div class="flex justify-center ">
+                            <NuxtLink :to="`/transaksi/${t.id}`" class="bg-blue-600 p-2 rounded text-white">Edit
+                            </NuxtLink>
+
                             <button 
-                            class="bg-red-500 rounded p-2 text-white cursor-pointer"
+                                class="bg-red-500 rounded p-2 text-white cursor-pointer"
                                 @click="remove(t.id)">Delete
                             </button>
                         </div>
